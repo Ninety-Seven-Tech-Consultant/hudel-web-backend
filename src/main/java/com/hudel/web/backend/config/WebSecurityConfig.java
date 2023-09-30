@@ -1,6 +1,9 @@
 package com.hudel.web.backend.config;
 
+import com.hudel.web.backend.rest.web.service.UserDetailServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +21,9 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+  @Autowired
+  private UserDetailServiceImpl userDetailService;
+
   private static final String[] SWAGGER_URLS = {
       // -- Swagger UI v2
       "/v2/api-docs",
@@ -34,6 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       "/swagger-ui/",
       "/swagger-ui"
   };
+
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
+  }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
