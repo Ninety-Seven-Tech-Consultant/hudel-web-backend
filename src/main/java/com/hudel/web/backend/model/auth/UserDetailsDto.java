@@ -19,6 +19,7 @@ public class UserDetailsDto implements UserDetails {
   private static final long serialVersionUID = -7900700137423582909L;
 
   private String id;
+  private String email;
   private String username;
 
   @JsonIgnore

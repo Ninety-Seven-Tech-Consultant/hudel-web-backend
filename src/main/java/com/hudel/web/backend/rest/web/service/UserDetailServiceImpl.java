@@ -20,6 +20,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     User user = userRepository.findByUsername(username);
     return UserDetailsDto.builder()
         .id(user.getId())
+        .email(user.getEmail())
         .username(user.getUsername())
         .password(user.getPassword())
         .authorities(null)

@@ -53,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests()
         .antMatchers(SWAGGER_URLS).permitAll()
+        .antMatchers("/api/auth/**").permitAll()
         .anyRequest().authenticated();
   }
 

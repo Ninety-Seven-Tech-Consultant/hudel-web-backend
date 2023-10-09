@@ -21,11 +21,15 @@ public class User extends BaseMongoEntity {
 
   private static final long serialVersionUID = -8519342404507639572L;
 
+
+  private String email;
   private String username;
   private String password;
 
-  public User(String id, Date createdAt, Date updatedAt, String username, String password) {
+  public User(String id, Date createdAt, Date updatedAt, String email, String username,
+      String password) {
     super(id, createdAt, updatedAt);
+    this.email = email;
     this.username = username;
     this.password = password;
   }
