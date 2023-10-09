@@ -14,4 +14,10 @@ public class SysparamProperties {
 
   @Value("${sysparam.jwt.secret}")
   private String jwtSecret;
+
+  @Value("${sysparam.jwt.cookiename}")
+  private String jwtCookieName;
+
+  @Value("${sysparam.jwt.expirationms}")
+  private Integer jwtExpirationTimeInMillis;
 }

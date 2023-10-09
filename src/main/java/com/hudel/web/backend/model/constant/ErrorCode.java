@@ -18,6 +18,9 @@ public enum ErrorCode {
   PASSWORD_DIGIT_COUNT_INVALID("ERR-PA40005", 400,
       "Password must have one or more numerical character"),
 
+  USER_CREDENTIALS_INVALID("ERR-PA40101", 401,
+      "The requested username and password is invalid"),
+
   EMAIL_ALREADY_EXISTS("ERR-PA42201", 422,
       "The requested email already exists"),
   USERNAME_ALREADY_EXISTS("ERR-PA42202", 422,
