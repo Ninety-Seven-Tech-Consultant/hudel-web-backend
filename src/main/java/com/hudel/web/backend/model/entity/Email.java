@@ -14,22 +14,20 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Document(collection = User.COLLECTION_NAME)
-public class User extends BaseMongoEntity {
+@Document(collection = Email.COLLECTION_NAME)
+public class Email extends BaseMongoEntity {
 
-  public static final String COLLECTION_NAME = "users";
+  public static final String COLLECTION_NAME = "emails";
 
-  private static final long serialVersionUID = -8519342404507639572L;
+  private static final long serialVersionUID = -2273279183288929602L;
 
   private String email;
-  private String username;
-  private String password;
+  private boolean isWelcomeMessageSent;
 
-  public User(String id, Date createdAt, Date updatedAt, String email, String username,
-      String password) {
+  public Email(String id, Date createdAt, Date updatedAt, String email,
+      boolean isWelcomeMessageSent) {
     super(id, createdAt, updatedAt);
     this.email = email;
-    this.username = username;
-    this.password = password;
+    this.isWelcomeMessageSent = isWelcomeMessageSent;
   }
 }

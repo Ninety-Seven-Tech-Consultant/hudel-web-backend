@@ -13,4 +13,8 @@ public class ApiPath {
   public static final String BASE_PATH_EMAIL = BASE_PATH_API + "/email";
 
   public static final String EMAIL_SEND_TEST = "/test";
+
+  public static final String BASE_PATH_LANDING_PAGE = BASE_PATH_API + "/landing-page";
+
+  public static final String LANDING_PAGE_SIGN_UP = "/sign-up/{email}";
 }

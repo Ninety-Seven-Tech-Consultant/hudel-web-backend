@@ -25,6 +25,7 @@
         <reactor-core.version>3.5.10</reactor-core.version>
         <feign-core.version>9.4.0</feign-core.version>
         <feign-form.version>2.1.0</feign-form.version>
+        <apache.commons.version>3.12.0</apache.commons.version>
     </properties>
 
     <dependencies>
@@ -104,6 +105,11 @@
             <groupId>io.github.openfeign.form</groupId>
             <artifactId>feign-form</artifactId>
             <version>${feign-form.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.version}</version>
         </dependency>
 
         <dependency>

@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
-  USER_EMAIL_INVALID("ERR-PA40001", 400,
+  EMAIL_FORMAT_INVALID("ERR-PA40001", 400,
       "Email requested is invalid, please re-check"),
   PASSWORD_LENGTH_INVALID("ERR-PA40002", 400,
       "Password must be 8 - 16 characters in length"),
@@ -17,6 +17,8 @@ public enum ErrorCode {
       "Password must have one or more lowercase character"),
   PASSWORD_DIGIT_COUNT_INVALID("ERR-PA40005", 400,
       "Password must have one or more numerical character"),
+  EMAIL_BLANK_OR_NULL("ERR-PA40006", 400,
+      "Email requested must not be blank or null"),
 
   USER_CREDENTIALS_INVALID("ERR-PA40101", 401,
       "The requested username and password is invalid"),
