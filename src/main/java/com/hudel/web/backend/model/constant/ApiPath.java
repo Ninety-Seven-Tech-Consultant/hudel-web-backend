@@ -9,4 +9,8 @@ public class ApiPath {
   public static final String REGISTER = "/register";
 
   public static final String LOGIN = "/login";
+
+  public static final String BASE_PATH_EMAIL = BASE_PATH_API + "/email";
+
+  public static final String EMAIL_SEND_TEST = "/test";
 }
