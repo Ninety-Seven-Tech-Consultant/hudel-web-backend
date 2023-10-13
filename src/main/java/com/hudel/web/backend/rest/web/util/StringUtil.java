@@ -50,4 +50,10 @@ public class StringUtil {
       throw new BaseException(ErrorCode.PASSWORD_DIGIT_COUNT_INVALID);
     }
   }
+
+  public void validateEmailNotNullOrBlank(String email) {
+    if (isStringNullOrBlank(email)) {
+      throw new BaseException(ErrorCode.EMAIL_BLANK_OR_NULL);
+    }
+  }
 }

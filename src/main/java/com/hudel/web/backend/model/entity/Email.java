@@ -22,12 +22,14 @@ public class Email extends BaseMongoEntity {
   private static final long serialVersionUID = -2273279183288929602L;
 
   private String email;
+  private boolean isEligible;
   private boolean isWelcomeMessageSent;
 
   public Email(String id, Date createdAt, Date updatedAt, String email,
-      boolean isWelcomeMessageSent) {
+      boolean isEligible, boolean isWelcomeMessageSent) {
     super(id, createdAt, updatedAt);
     this.email = email;
+    this.isEligible = isEligible;
     this.isWelcomeMessageSent = isWelcomeMessageSent;
   }
 }

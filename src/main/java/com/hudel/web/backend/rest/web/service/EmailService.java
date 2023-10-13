@@ -1,8 +1,10 @@
 package com.hudel.web.backend.rest.web.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 public interface EmailService {
 
-  void sendTest(String email, String name);
+  void sendNewWelcomeEmail(String email) throws JsonProcessingException;
 
   void sendWelcomeEmail(String email);
 }
