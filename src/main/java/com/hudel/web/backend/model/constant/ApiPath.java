@@ -10,6 +10,12 @@ public class ApiPath {
 
   public static final String LOGIN = "/login";
 
+  public static final String BASE_PATH_SYSTEM_PARAMETER = BASE_PATH_API + "/system-parameters";
+
+  public static final String SYSTEM_PARAMETER_FIND_BY_KEY = "/{key}";
+
+  public static final String SYSTEM_PARAMETER_DELETE_BY_KEY = "/{key}";
+
   public static final String BASE_PATH_EMAIL = BASE_PATH_API + "/email";
 
   public static final String EMAIL_SEND_TEST = "/test";

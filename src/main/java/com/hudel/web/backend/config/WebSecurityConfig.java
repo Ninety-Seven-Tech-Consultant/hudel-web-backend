@@ -55,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers(SWAGGER_URLS).permitAll()
         .antMatchers("/api/auth/**").permitAll()
+        .antMatchers("/api/system-parameters/**").permitAll()
         .antMatchers("/api/email/**").permitAll()
         .antMatchers("/api/landing-page/**").permitAll()
         .anyRequest().authenticated();
