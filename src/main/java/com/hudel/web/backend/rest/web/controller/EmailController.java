@@ -1,6 +1,5 @@
 package com.hudel.web.backend.rest.web.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hudel.web.backend.model.constant.ApiPath;
 import com.hudel.web.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.hudel.web.backend.rest.web.service.EmailService;
@@ -20,8 +19,7 @@ public class EmailController extends BaseController {
   private EmailService emailService;
 
   @PostMapping(value = ApiPath.SEND_WELCOME_EMAIL)
-  public RestBaseResponse sendWelcomeEmail(@PathVariable("email") String email)
-      throws JsonProcessingException {
+  public RestBaseResponse sendWelcomeEmail(@PathVariable("email") String email) {
     emailService.sendWelcomeEmail(email);
     return toBaseResponse();
   }
