@@ -1,5 +1,6 @@
 package com.hudel.web.backend.rest.web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hudel.web.backend.model.constant.ApiPath;
 import com.hudel.web.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.hudel.web.backend.rest.web.service.LandingPageService;
@@ -19,7 +20,8 @@ public class LandingPageController extends BaseController {
   private LandingPageService landingPageService;
 
   @PostMapping(value = ApiPath.LANDING_PAGE_SIGN_UP)
-  public RestBaseResponse signUp(@PathVariable("email") String email) {
+  public RestBaseResponse signUp(@PathVariable("email") String email)
+      throws JsonProcessingException {
     landingPageService.signUp(email);
     return toBaseResponse();
   }

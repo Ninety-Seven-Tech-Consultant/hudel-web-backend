@@ -27,6 +27,8 @@ public enum ErrorCode {
       "System parameter with the requested title already exists"),
   SYSTEM_PARAMETER_NOT_FOUND("ERR-PA40010", 400,
       "The requested system parameter does not exists"),
+  EMAIL_NOT_ELIGIBLE("ERR-PA40011", 400,
+      "Oops, looks like Hudel is not available for your university yet!"),
 
   USER_CREDENTIALS_INVALID("ERR-PA40101", 401,
       "The requested username and password is invalid"),

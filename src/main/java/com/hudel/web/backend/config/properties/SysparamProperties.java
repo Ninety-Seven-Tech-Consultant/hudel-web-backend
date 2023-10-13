@@ -16,4 +16,7 @@ public class SysparamProperties {
   private String jwtSecret;
   private String jwtCookieName;
   private Integer jwtExpirationTimeInMillis;
+
+  // Email
+  private String emailDefaultFrom;
 }
