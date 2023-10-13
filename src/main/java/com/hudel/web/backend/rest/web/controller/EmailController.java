@@ -1,10 +1,13 @@
 package com.hudel.web.backend.rest.web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hudel.web.backend.model.constant.ApiPath;
 import com.hudel.web.backend.rest.web.model.response.rest.RestBaseResponse;
+import com.hudel.web.backend.rest.web.model.response.rest.RestListResponse;
 import com.hudel.web.backend.rest.web.service.EmailService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +25,10 @@ public class EmailController extends BaseController {
   public RestBaseResponse sendWelcomeEmail(@PathVariable("email") String email) {
     emailService.sendWelcomeEmail(email);
     return toBaseResponse();
+  }
+
+  @GetMapping(value = ApiPath.GET_WHITELISTED_DOMAINS)
+  public RestListResponse<String> getWhitelistedDomains() throws JsonProcessingException {
+    return toListResponse(emailService.getWhitelistedDomains());
   }
 }

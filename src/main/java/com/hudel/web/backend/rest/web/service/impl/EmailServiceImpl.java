@@ -59,6 +59,14 @@ public class EmailServiceImpl implements EmailService {
     sendAndSaveWelcomeEmail(emailEntity);
   }
 
+  @Override
+  public List<String> getWhitelistedDomains() throws JsonProcessingException {
+    SystemParameter sysParam =
+        systemParameterService.findByKey(SystemParameterKey.EMAIL_DOMAIN_WHITELIST);
+    return objectMapper.readValue(new Gson().toJson(sysParam.getData()),
+        new TypeReference<List<String>>(){});
+  }
+
   private Email buildDefaultEmail(String email) throws JsonProcessingException {
     return Email.builder()
         .email(email)

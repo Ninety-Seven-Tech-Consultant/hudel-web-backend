@@ -16,11 +16,13 @@ public class ApiPath {
 
   public static final String SYSTEM_PARAMETER_DELETE_BY_KEY = "/{key}";
 
+  public static final String BASE_PATH_LANDING_PAGE = BASE_PATH_API + "/landing-page";
+
+  public static final String LANDING_PAGE_SIGN_UP = "/sign-up/{email}";
+
   public static final String BASE_PATH_EMAIL = BASE_PATH_API + "/email";
 
   public static final String SEND_WELCOME_EMAIL = "/{email}";
 
-  public static final String BASE_PATH_LANDING_PAGE = BASE_PATH_API + "/landing-page";
-
-  public static final String LANDING_PAGE_SIGN_UP = "/sign-up/{email}";
+  public static final String GET_WHITELISTED_DOMAINS = "/whitelisted-domains";
 }
