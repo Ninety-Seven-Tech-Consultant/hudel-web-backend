@@ -31,6 +31,8 @@ public enum ErrorCode {
       "Oops, looks like Hudel is not available for your university yet!"),
   EMAIL_NOT_FOUND("ERR-PA40012", 400,
       "The requested email does not exists"),
+  DOMAIN_BLANK_OR_NULL("ERR-PA40013", 400,
+      "Domain requested must not be blank or null"),
 
   USER_CREDENTIALS_INVALID("ERR-PA40101", 401,
       "The requested username and password is invalid"),

@@ -11,4 +11,6 @@ public interface EmailService {
   void sendWelcomeEmail(String email);
 
   List<String> getWhitelistedDomains() throws JsonProcessingException;
+
+  List<String> whitelistDomain(String domain) throws JsonProcessingException;
 }

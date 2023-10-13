@@ -25,4 +25,6 @@ public class ApiPath {
   public static final String SEND_WELCOME_EMAIL = "/{email}";
 
   public static final String GET_WHITELISTED_DOMAINS = "/whitelisted-domains";
+
+  public static final String WHITELIST_DOMAIN = "/whitelisted-domains/{domain}";
 }

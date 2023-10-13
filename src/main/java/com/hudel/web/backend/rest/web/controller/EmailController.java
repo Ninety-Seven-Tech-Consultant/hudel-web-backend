@@ -31,4 +31,10 @@ public class EmailController extends BaseController {
   public RestListResponse<String> getWhitelistedDomains() throws JsonProcessingException {
     return toListResponse(emailService.getWhitelistedDomains());
   }
+
+  @PostMapping(value = ApiPath.WHITELIST_DOMAIN)
+  public RestListResponse<String> whitelistDomain(@PathVariable("domain") String domain)
+      throws JsonProcessingException {
+    return toListResponse(emailService.whitelistDomain(domain));
+  }
 }

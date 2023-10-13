@@ -12,6 +12,7 @@ import com.hudel.web.backend.model.entity.SystemParameter;
 import com.hudel.web.backend.model.exception.BaseException;
 import com.hudel.web.backend.outbound.PostmarkOutbound;
 import com.hudel.web.backend.repository.EmailRepository;
+import com.hudel.web.backend.rest.web.model.request.UpsertSystemParameterRequest;
 import com.hudel.web.backend.rest.web.service.EmailService;
 import com.hudel.web.backend.rest.web.service.SystemParameterService;
 import com.hudel.web.backend.rest.web.util.StringUtil;
@@ -45,7 +46,7 @@ public class EmailServiceImpl implements EmailService {
 
   @Override
   public void sendNewWelcomeEmail(String email) throws JsonProcessingException {
-    Email emailEntity = buildDefaultEmail(email);
+    Email emailEntity = getOrDefault(email);
     sendAndSaveWelcomeEmail(emailEntity);
   }
 
@@ -67,19 +68,36 @@ public class EmailServiceImpl implements EmailService {
         new TypeReference<List<String>>(){});
   }
 
-  private Email buildDefaultEmail(String email) throws JsonProcessingException {
-    return Email.builder()
-        .email(email)
-        .isEligible(isEmailWhitelisted(email))
-        .isWelcomeMessageSent(false)
-        .build();
-  }
-
-  private boolean isEmailWhitelisted(String email) throws JsonProcessingException {
+  @Override
+  public List<String> whitelistDomain(String domain) throws JsonProcessingException {
+    if (stringUtil.isStringNullOrBlank(domain)) {
+      throw new BaseException(ErrorCode.DOMAIN_BLANK_OR_NULL);
+    }
     SystemParameter sysParam =
         systemParameterService.findByKey(SystemParameterKey.EMAIL_DOMAIN_WHITELIST);
     List<String> whitelistedDomains = objectMapper.readValue(new Gson().toJson(sysParam.getData()),
         new TypeReference<List<String>>(){});
+    whitelistedDomains.add(domain);
+    sysParam.setData(whitelistedDomains);
+    systemParameterService.update(buildUpsertSystemParameterRequest(sysParam));
+    updateIsEligibleStatusByDomain(domain);
+    return whitelistedDomains;
+  }
+
+  private Email getOrDefault(String email) throws JsonProcessingException {
+    Email emailEntity = emailRepository.findByEmail(email);
+    if (Objects.isNull(emailEntity)) {
+      return Email.builder()
+          .email(email)
+          .isEligible(isEmailWhitelisted(email))
+          .isWelcomeMessageSent(false)
+          .build();
+    }
+    return emailEntity;
+  }
+
+  private boolean isEmailWhitelisted(String email) throws JsonProcessingException {
+    List<String> whitelistedDomains = getWhitelistedDomains();
     for (String domain : whitelistedDomains) {
       if (email.endsWith(domain)) {
         return true;
@@ -98,5 +116,22 @@ public class EmailServiceImpl implements EmailService {
     }
     emailRepository.save(email);
     throw new BaseException(ErrorCode.EMAIL_NOT_ELIGIBLE);
+  }
+
+  private UpsertSystemParameterRequest buildUpsertSystemParameterRequest(
+      SystemParameter systemParameter) {
+    return UpsertSystemParameterRequest.builder()
+        .key(systemParameter.getKey())
+        .data(systemParameter.getData())
+        .type(systemParameter.getType())
+        .build();
+  }
+
+  private void updateIsEligibleStatusByDomain(String domain) {
+    List<Email> emailsToBeUpdated = emailRepository.findAllByDomain(domain);
+    emailsToBeUpdated.forEach(email -> {
+      email.setEligible(true);
+    });
+    emailRepository.saveAll(emailsToBeUpdated);
   }
 }
