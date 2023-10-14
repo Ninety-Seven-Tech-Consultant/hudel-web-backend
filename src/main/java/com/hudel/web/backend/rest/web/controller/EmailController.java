@@ -7,6 +7,7 @@ import com.hudel.web.backend.rest.web.model.response.rest.RestListResponse;
 import com.hudel.web.backend.rest.web.service.EmailService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,5 +37,11 @@ public class EmailController extends BaseController {
   public RestListResponse<String> whitelistDomain(@PathVariable("domain") String domain)
       throws JsonProcessingException {
     return toListResponse(emailService.whitelistDomain(domain));
+  }
+
+  @DeleteMapping(value = ApiPath.DELETE_WHITELISTED_DOMAIN)
+  public RestListResponse<String> deleteWhitelistedDomain(@PathVariable("domain") String domain)
+      throws JsonProcessingException {
+    return toListResponse(emailService.deleteWhitelistedDomain(domain));
   }
 }

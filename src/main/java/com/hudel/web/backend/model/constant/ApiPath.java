@@ -27,4 +27,6 @@ public class ApiPath {
   public static final String GET_WHITELISTED_DOMAINS = "/whitelisted-domains";
 
   public static final String WHITELIST_DOMAIN = "/whitelisted-domains/{domain}";
+
+  public static final String DELETE_WHITELISTED_DOMAIN = "/whitelisted-domains/{domain}";
 }

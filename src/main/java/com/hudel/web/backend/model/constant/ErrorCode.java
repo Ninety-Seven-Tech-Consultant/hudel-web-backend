@@ -33,6 +33,8 @@ public enum ErrorCode {
       "The requested email does not exists"),
   DOMAIN_BLANK_OR_NULL("ERR-PA40013", 400,
       "Domain requested must not be blank or null"),
+  WHITELISTED_DOMAIN_ALREADY_EXISTS("ERR-PA40014", 400,
+      "The domain requested has already been whitelisted"),
 
   USER_CREDENTIALS_INVALID("ERR-PA40101", 401,
       "The requested username and password is invalid"),

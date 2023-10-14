@@ -70,17 +70,32 @@ public class EmailServiceImpl implements EmailService {
 
   @Override
   public List<String> whitelistDomain(String domain) throws JsonProcessingException {
-    if (stringUtil.isStringNullOrBlank(domain)) {
-      throw new BaseException(ErrorCode.DOMAIN_BLANK_OR_NULL);
-    }
+    stringUtil.validatedWhitelistDomainNotNullOrBlank(domain);
     SystemParameter sysParam =
         systemParameterService.findByKey(SystemParameterKey.EMAIL_DOMAIN_WHITELIST);
     List<String> whitelistedDomains = objectMapper.readValue(new Gson().toJson(sysParam.getData()),
         new TypeReference<List<String>>(){});
+    if (whitelistedDomains.contains(domain)) {
+      throw new BaseException(ErrorCode.WHITELISTED_DOMAIN_ALREADY_EXISTS);
+    }
     whitelistedDomains.add(domain);
     sysParam.setData(whitelistedDomains);
     systemParameterService.update(buildUpsertSystemParameterRequest(sysParam));
-    updateIsEligibleStatusByDomain(domain);
+    updateIsEligibleStatusByDomain(domain, true);
+    return whitelistedDomains;
+  }
+
+  @Override
+  public List<String> deleteWhitelistedDomain(String domain) throws JsonProcessingException {
+    stringUtil.validatedWhitelistDomainNotNullOrBlank(domain);
+    SystemParameter sysParam =
+        systemParameterService.findByKey(SystemParameterKey.EMAIL_DOMAIN_WHITELIST);
+    List<String> whitelistedDomains = objectMapper.readValue(new Gson().toJson(sysParam.getData()),
+        new TypeReference<List<String>>(){});
+    whitelistedDomains.removeIf(string -> string.equals(domain));
+    sysParam.setData(whitelistedDomains);
+    systemParameterService.update(buildUpsertSystemParameterRequest(sysParam));
+    updateIsEligibleStatusByDomain(domain, false);
     return whitelistedDomains;
   }
 
@@ -127,10 +142,10 @@ public class EmailServiceImpl implements EmailService {
         .build();
   }
 
-  private void updateIsEligibleStatusByDomain(String domain) {
+  private void updateIsEligibleStatusByDomain(String domain, boolean isEligible) {
     List<Email> emailsToBeUpdated = emailRepository.findAllByDomain(domain);
     emailsToBeUpdated.forEach(email -> {
-      email.setEligible(true);
+      email.setEligible(isEligible);
     });
     emailRepository.saveAll(emailsToBeUpdated);
   }

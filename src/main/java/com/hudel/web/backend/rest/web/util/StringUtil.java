@@ -56,4 +56,10 @@ public class StringUtil {
       throw new BaseException(ErrorCode.EMAIL_BLANK_OR_NULL);
     }
   }
+
+  public void validatedWhitelistDomainNotNullOrBlank(String domain) {
+    if (isStringNullOrBlank(domain)) {
+      throw new BaseException(ErrorCode.DOMAIN_BLANK_OR_NULL);
+    }
+  }
 }

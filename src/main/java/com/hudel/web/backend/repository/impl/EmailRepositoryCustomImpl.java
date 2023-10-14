@@ -23,7 +23,7 @@ public class EmailRepositoryCustomImpl implements EmailRepositoryCustom {
   public List<Email> findAllByDomain(String domain) {
     Query query = new Query();
     if (!stringUtil.isStringNullOrBlank(domain)) {
-      query.addCriteria(where("email").regex(String.format(".*%s.*", domain), "i"));
+      query.addCriteria(where("email").regex(String.format(".*%s", domain), "i"));
     }
     return mongoTemplate.find(query, Email.class);
   }
