@@ -35,6 +35,10 @@ public enum ErrorCode {
       "Domain requested must not be blank or null"),
   WHITELISTED_DOMAIN_ALREADY_EXISTS("ERR-PA40014", 400,
       "The domain requested has already been whitelisted"),
+  PAGE_NUMBER_LESS_THAN_ZERO("ERR-40015", 400,
+      "Page number must not be less than zero"),
+  PAGE_SIZE_LESS_THAN_OR_EQUAL_TO_ZERO("ERR-40016", 400,
+      "Page size must be greater than zero"),
 
   USER_CREDENTIALS_INVALID("ERR-PA40101", 401,
       "The requested username and password is invalid"),

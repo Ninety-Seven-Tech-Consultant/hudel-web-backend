@@ -17,6 +17,8 @@ import com.hudel.web.backend.rest.web.service.EmailService;
 import com.hudel.web.backend.rest.web.service.SystemParameterService;
 import com.hudel.web.backend.rest.web.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -99,6 +101,12 @@ public class EmailServiceImpl implements EmailService {
     return whitelistedDomains;
   }
 
+  @Override
+  public Page<Email> findByEmail(Integer page, Integer size, String email) {
+    PageRequest pageRequest = validateAndGetPageRequest(page, size);
+    return emailRepository.searchByEmail(Objects.isNull(email) ? "" : email, pageRequest);
+  }
+
   private Email getOrDefault(String email) throws JsonProcessingException {
     Email emailEntity = emailRepository.findByEmail(email);
     if (Objects.isNull(emailEntity)) {
@@ -143,10 +151,30 @@ public class EmailServiceImpl implements EmailService {
   }
 
   private void updateIsEligibleStatusByDomain(String domain, boolean isEligible) {
-    List<Email> emailsToBeUpdated = emailRepository.findAllByDomain(domain);
+    List<Email> emailsToBeUpdated = emailRepository.findAllByDomainEndsWith(domain);
     emailsToBeUpdated.forEach(email -> {
       email.setEligible(isEligible);
     });
     emailRepository.saveAll(emailsToBeUpdated);
+  }
+
+  private PageRequest validateAndGetPageRequest(Integer page, Integer size) {
+    page = validateAndInitializePageNumber(page);
+    size = validateAndInitializePageSize(size);
+    return PageRequest.of(page, size);
+  }
+
+  private int validateAndInitializePageNumber(Integer page) {
+    if (Objects.nonNull(page) && page < 0) {
+      throw new BaseException(ErrorCode.PAGE_NUMBER_LESS_THAN_ZERO);
+    }
+    return Objects.isNull(page) ? 0 : page;
+  }
+
+  private int validateAndInitializePageSize(Integer size) {
+    if (Objects.nonNull(size) && size <= 0) {
+      throw new BaseException(ErrorCode.PAGE_SIZE_LESS_THAN_OR_EQUAL_TO_ZERO);
+    }
+    return Objects.isNull(size) ? 10 : size;
   }
 }
