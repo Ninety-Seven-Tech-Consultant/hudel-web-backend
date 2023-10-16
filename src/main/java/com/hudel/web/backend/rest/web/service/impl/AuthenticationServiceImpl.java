@@ -9,6 +9,7 @@ import com.hudel.web.backend.rest.web.model.request.LoginRequest;
 import com.hudel.web.backend.rest.web.model.request.RegisterRequest;
 import com.hudel.web.backend.rest.web.service.AuthenticationService;
 import com.hudel.web.backend.rest.web.util.JwtUtil;
+import com.hudel.web.backend.rest.web.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,8 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
-
-import java.util.regex.Pattern;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -39,8 +38,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Autowired
   private JwtUtil jwtUtil;
 
-  private final int PASSWORD_MIN_LENGTH = 8;
-  private final int PASSWORD_MAX_LENGTH = 16;
+  @Autowired
+  private StringUtil stringUtil;
 
   @Override
   public void register(RegisterRequest request) {
@@ -67,42 +66,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     } else if (userRepository.existsByUsername(request.getUsername())) {
       throw new BaseException(ErrorCode.USERNAME_ALREADY_EXISTS);
     }
-    validateEmailValid(request.getEmail());
-    validatePasswordValid(request.getPassword());
-  }
-
-
-  private void validateEmailValid(String email) {
-    Pattern pattern = Pattern.compile("^(.+)@(\\S+)$");
-    if (!pattern.matcher(email).matches()) {
-      throw new BaseException(ErrorCode.USER_EMAIL_INVALID);
-    }
-  }
-
-  private void validatePasswordValid(String password) {
-    if (password.length() < PASSWORD_MIN_LENGTH || password.length() > PASSWORD_MAX_LENGTH) {
-      throw new BaseException(ErrorCode.PASSWORD_LENGTH_INVALID);
-    }
-
-    int upCount = 0; int lowCount = 0; int digit = 0;
-    for (int i = 0; i < password.length(); i++) {
-      char c = password.charAt(i);
-      if (Character.isUpperCase(c)) {
-        upCount++;
-      } else if (Character.isLowerCase(c)) {
-        lowCount++;
-      } else if (Character.isDigit(c)) {
-        digit++;
-      }
-    }
-
-    if (upCount == 0) {
-      throw new BaseException(ErrorCode.PASSWORD_UPPERCASE_COUNT_INVALID);
-    } else if (lowCount == 0) {
-      throw new BaseException(ErrorCode.PASSWORD_LOWERCASE_COUNT_INVALID);
-    } else if (digit == 0) {
-      throw new BaseException(ErrorCode.PASSWORD_DIGIT_COUNT_INVALID);
-    }
+    stringUtil.validateEmailValid(request.getEmail());
+    stringUtil.validatePasswordValid(request.getPassword());
   }
 
   private User buildUser(RegisterRequest request) {

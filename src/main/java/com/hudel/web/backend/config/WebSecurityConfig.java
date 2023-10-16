@@ -1,5 +1,6 @@
 package com.hudel.web.backend.config;
 
+import com.hudel.web.backend.config.filter.AuthTokenFilter;
 import com.hudel.web.backend.rest.web.service.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,6 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
   private UserDetailServiceImpl userDetailService;
+
+  @Autowired
+  private AuthTokenFilter authTokenFilter;
 
   private static final String[] SWAGGER_URLS = {
       // -- Swagger UI v2
@@ -55,7 +60,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers(SWAGGER_URLS).permitAll()
         .antMatchers("/api/auth/**").permitAll()
+        .antMatchers("/api/landing-page/**").permitAll()
         .anyRequest().authenticated();
+
+    http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
   }
 
   @Bean
