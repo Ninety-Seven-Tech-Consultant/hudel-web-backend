@@ -38,7 +38,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     private ApiInfo buildApiInfo () {
         return new ApiInfoBuilder()
             .title("Hudel Web Backend Service")
-            .version("0.1.0-2-SNAPSHOT")
+            .version("0.1.0-2")
             .build();
     }
 }
