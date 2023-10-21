@@ -16,13 +16,14 @@ import com.hudel.web.backend.rest.web.model.request.UpsertSystemParameterRequest
 import com.hudel.web.backend.rest.web.service.EmailService;
 import com.hudel.web.backend.rest.web.service.SystemParameterService;
 import com.hudel.web.backend.rest.web.util.StringUtil;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -131,7 +132,8 @@ public class EmailServiceImpl implements EmailService {
 
   private void sendAndSaveWelcomeEmail(Email email) {
     if (email.isEligible()) {
-      postmarkOutbound.sendEmailWithTemplate("welcome", Collections.emptyMap(),
+      Map<String, Object> templateModel = Map.of("randomText", RandomString.make(64));
+      postmarkOutbound.sendEmailWithTemplate("welcome", templateModel,
           sysparamProperties.getEmailDefaultFrom(), email.getEmail());
       email.setWelcomeMessageSent(true);
       emailRepository.save(email);
