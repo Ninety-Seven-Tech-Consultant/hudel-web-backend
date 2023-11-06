@@ -50,17 +50,14 @@ public class EmailServiceImpl implements EmailService {
   @Override
   public void sendNewWelcomeEmail(String email) throws JsonProcessingException {
     Email emailEntity = getOrDefault(email);
-    sendAndSaveWelcomeEmail(emailEntity);
+    sendAndSaveWelcomeEmail(emailEntity, true);
   }
 
   @Override
-  public void sendWelcomeEmail(String email) {
+  public void sendWelcomeEmail(String email) throws JsonProcessingException {
     stringUtil.validateEmailNotNullOrBlank(email);
-    Email emailEntity = emailRepository.findByEmail(email);
-    if (Objects.isNull(emailEntity)) {
-      throw new BaseException(ErrorCode.EMAIL_NOT_FOUND);
-    }
-    sendAndSaveWelcomeEmail(emailEntity);
+    Email emailEntity = getOrDefault(email);
+    sendAndSaveWelcomeEmail(emailEntity, false);
   }
 
   @Override
@@ -130,8 +127,8 @@ public class EmailServiceImpl implements EmailService {
     return false;
   }
 
-  private void sendAndSaveWelcomeEmail(Email email) {
-    if (email.isEligible()) {
+  private void sendAndSaveWelcomeEmail(Email email, boolean checkEmailEligibility) {
+    if (!checkEmailEligibility || email.isEligible()) {
       Map<String, Object> templateModel = Map.of("randomText", RandomString.make(64));
       postmarkOutbound.sendEmailWithTemplate("welcome", templateModel,
           sysparamProperties.getEmailDefaultFrom(), email.getEmail());
