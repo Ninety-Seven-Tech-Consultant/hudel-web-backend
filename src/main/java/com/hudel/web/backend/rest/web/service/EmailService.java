@@ -10,7 +10,7 @@ public interface EmailService {
 
   void sendNewWelcomeEmail(String email) throws JsonProcessingException;
 
-  void sendWelcomeEmail(String email);
+  void sendWelcomeEmail(String email) throws JsonProcessingException;
 
   List<String> getWhitelistedDomains() throws JsonProcessingException;
 

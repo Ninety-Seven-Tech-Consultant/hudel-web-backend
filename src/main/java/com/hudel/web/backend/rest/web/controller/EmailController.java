@@ -34,7 +34,8 @@ public class EmailController extends BaseController {
   private EmailService emailService;
 
   @PostMapping(value = ApiPath.SEND_WELCOME_EMAIL)
-  public RestBaseResponse sendWelcomeEmail(@PathVariable("email") String email) {
+  public RestBaseResponse sendWelcomeEmail(@PathVariable("email") String email)
+      throws JsonProcessingException {
     emailService.sendWelcomeEmail(email);
     return toBaseResponse();
   }
