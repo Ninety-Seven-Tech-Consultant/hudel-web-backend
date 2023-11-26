@@ -39,6 +39,10 @@ public enum ErrorCode {
       "Page number must not be less than zero"),
   PAGE_SIZE_LESS_THAN_OR_EQUAL_TO_ZERO("ERR-40016", 400,
       "Page size must be greater than zero"),
+  FILE_IS_EMPTY("ERR-PA40017", 400,
+      "Failed to store empty file, file must not be empty"),
+  FILENAME_INVALID("ERR-PA40018", 400,
+      "Filename invalid; cannot store file with relative path outside current directory"),
 
   USER_CREDENTIALS_INVALID("ERR-PA40101", 401,
       "The requested username and password is invalid"),
