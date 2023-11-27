@@ -31,7 +31,7 @@ public class SysparamProperties {
   private String imageMaxCompressionSizeInKb;
 
   // Blog
-  private String defaultImageId;
+  private String blogDefaultImageId;
 
   private Float maxImageCompressionSizeInKbValue;
 }
