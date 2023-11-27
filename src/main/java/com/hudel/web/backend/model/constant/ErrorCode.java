@@ -43,6 +43,10 @@ public enum ErrorCode {
       "Failed to store empty file, file must not be empty"),
   FILENAME_INVALID("ERR-PA40018", 400,
       "Filename invalid; cannot store file with relative path outside current directory"),
+  FILETYPE_MUST_BE_IMAGE("ERR-PA40019", 400,
+      "Only images (png, jpeg/jpg) are allowed, please double check the filetype"),
+  IMAGE_ID_DOES_NOT_EXISTS("ERR-PA40020", 400,
+      "Image with the requested id does not exists"),
 
   USER_CREDENTIALS_INVALID("ERR-PA40101", 401,
       "The requested username and password is invalid"),
