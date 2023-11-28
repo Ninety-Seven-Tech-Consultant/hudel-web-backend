@@ -47,6 +47,10 @@ public enum ErrorCode {
       "Only images (png, jpeg/jpg) are allowed, please double check the filetype"),
   IMAGE_ID_DOES_NOT_EXISTS("ERR-PA40020", 400,
       "Image with the requested id does not exists"),
+  ID_IS_NULL("ERR-PA40021", 400,
+      "The ID must not be null"),
+  BLOG_NOT_FOUND("ERR-PA40022", 400,
+      "The requested blog does not exists"),
 
   USER_CREDENTIALS_INVALID("ERR-PA40101", 401,
       "The requested username and password is invalid"),

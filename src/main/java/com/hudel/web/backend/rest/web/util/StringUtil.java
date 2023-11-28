@@ -64,11 +64,11 @@ public class StringUtil {
     }
   }
 
-  public static String generateFileId() {
+  public String generateFileId() {
     return generateIdOfPrefixAndLength("FIL-", 6);
   }
 
-  private static String generateIdOfPrefixAndLength(String prefix, int length) {
+  private String generateIdOfPrefixAndLength(String prefix, int length) {
     return prefix + RandomString.make(length).toUpperCase();
   }
 }

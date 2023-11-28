@@ -26,4 +26,5 @@ public class ApiPath {
   public static final String IMAGE_DELETE_BY_ID = "/{id}";
 
   public static final String BASE_PATH_BLOG = BASE_PATH_API + "/blogs";
+  public static final String BLOG_UPDATE_COVER_IMAGE_BY_ID = "/{id}/update-cover-image";
 }

@@ -11,10 +11,16 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Api(value = "Blog", description = "Blog Service API")
 @Validated
@@ -28,6 +34,13 @@ public class BlogController extends BaseController {
   @PostMapping
   public RestSingleResponse<BlogResponse> createNewBlog(@RequestBody CreateNewBlogRequest request) {
     Blog blog = blogService.createNewBlog(request);
+    return toSingleResponse(toBlogResponse(blog));
+  }
+
+  @PostMapping(value = ApiPath.BLOG_UPDATE_COVER_IMAGE_BY_ID)
+  public RestSingleResponse<BlogResponse> updateCoverImageById(@PathVariable("id") String id,
+      @RequestParam("file") MultipartFile file) throws IOException {
+    Blog blog = blogService.updateCoverImageById(id, file);
     return toSingleResponse(toBlogResponse(blog));
   }
 

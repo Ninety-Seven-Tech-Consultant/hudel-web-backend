@@ -24,13 +24,16 @@ import java.util.Objects;
 public class ImageServiceImpl implements ImageService {
 
   @Autowired
+  private FileRepository fileRepository;
+
+  @Autowired
   private FileStorageService fileStorageService;
 
   @Autowired
   private ImageUtil imageUtil;
 
   @Autowired
-  private FileRepository fileRepository;
+  private StringUtil stringUtil;
 
   @Override
   public File uploadImage(MultipartFile file) throws IOException {
@@ -39,7 +42,7 @@ public class ImageServiceImpl implements ImageService {
     Tuple3<String, String, String> tuple3 =
         fileStorageService.storeFile(imageUtil.compressImage(file));
     return fileRepository.save(File.builder()
-        .fileId(StringUtil.generateFileId())
+        .fileId(stringUtil.generateFileId())
         .path(tuple3.getT1())
         .filename(tuple3.getT2())
         .filetype(tuple3.getT3())
