@@ -41,15 +41,19 @@ public class BlogServiceImpl implements BlogService {
 
   @Override
   public Blog updateCoverImageById(String id, MultipartFile file) throws IOException {
-    if (stringUtil.isStringNullOrBlank(id)) {
-      throw new BaseException(ErrorCode.ID_IS_NULL);
-    }
-    Blog blog = blogRepository.findById(id).orElse(null);
-    if (Objects.isNull(blog)) {
-      throw new BaseException(ErrorCode.BLOG_NOT_FOUND);
-    }
+    validateIdNotNull(id);
+    Blog blog = findBlogById(id);
     File coverImage = imageService.uploadImage(file);
     updateCoverImage(blog, coverImage);
+    return blogRepository.save(blog);
+  }
+
+  @Override
+  public Blog updateContentImageById(String id, MultipartFile file) throws IOException {
+    validateIdNotNull(id);
+    Blog blog = findBlogById(id);
+    File coverImage = imageService.uploadImage(file);
+    updateContentImage(blog, coverImage);
     return blogRepository.save(blog);
   }
 
@@ -69,11 +73,32 @@ public class BlogServiceImpl implements BlogService {
         .build();
   }
 
+  private void validateIdNotNull(String id) {
+    if (stringUtil.isStringNullOrBlank(id)) {
+      throw new BaseException(ErrorCode.ID_IS_NULL);
+    }
+  }
+
+  private Blog findBlogById(String id) {
+    Blog blog = blogRepository.findById(id).orElse(null);
+    if (Objects.isNull(blog)) {
+      throw new BaseException(ErrorCode.BLOG_NOT_FOUND);
+    }
+    return blog;
+  }
+
   private void updateCoverImage(Blog blog, File file) {
     if (!blog.getCoverImage().isDefault()) {
       imageService.deleteImageById(blog.getCoverImage().getImageId());
     }
     blog.setCoverImage(toBlogImage(file));
+  }
+
+  private void updateContentImage(Blog blog, File file) {
+    if (!blog.getContentImage().isDefault()) {
+      imageService.deleteImageById(blog.getContentImage().getImageId());
+    }
+    blog.setContentImage(toBlogImage(file));
   }
 
   private BlogImage toBlogImage(File file) {

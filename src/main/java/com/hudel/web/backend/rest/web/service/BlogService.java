@@ -11,4 +11,6 @@ public interface BlogService {
   Blog createNewBlog(CreateNewBlogRequest request);
 
   Blog updateCoverImageById(String id, MultipartFile file) throws IOException;
+
+  Blog updateContentImageById(String id, MultipartFile file) throws IOException;
 }
