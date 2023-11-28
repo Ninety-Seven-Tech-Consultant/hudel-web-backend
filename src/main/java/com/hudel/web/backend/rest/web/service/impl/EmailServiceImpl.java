@@ -15,6 +15,7 @@ import com.hudel.web.backend.repository.EmailRepository;
 import com.hudel.web.backend.rest.web.model.request.UpsertSystemParameterRequest;
 import com.hudel.web.backend.rest.web.service.EmailService;
 import com.hudel.web.backend.rest.web.service.SystemParameterService;
+import com.hudel.web.backend.rest.web.util.PageUtil;
 import com.hudel.web.backend.rest.web.util.StringUtil;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +102,7 @@ public class EmailServiceImpl implements EmailService {
 
   @Override
   public Page<Email> findByEmail(Integer page, Integer size, String email) {
-    PageRequest pageRequest = validateAndGetPageRequest(page, size);
+    PageRequest pageRequest = PageUtil.validateAndGetPageRequest(page, size);
     return emailRepository.searchByEmail(Objects.isNull(email) ? "" : email, pageRequest);
   }
 
@@ -155,25 +156,5 @@ public class EmailServiceImpl implements EmailService {
       email.setEligible(isEligible);
     });
     emailRepository.saveAll(emailsToBeUpdated);
-  }
-
-  private PageRequest validateAndGetPageRequest(Integer page, Integer size) {
-    page = validateAndInitializePageNumber(page);
-    size = validateAndInitializePageSize(size);
-    return PageRequest.of(page, size);
-  }
-
-  private int validateAndInitializePageNumber(Integer page) {
-    if (Objects.nonNull(page) && page < 0) {
-      throw new BaseException(ErrorCode.PAGE_NUMBER_LESS_THAN_ZERO);
-    }
-    return Objects.isNull(page) ? 0 : page;
-  }
-
-  private int validateAndInitializePageSize(Integer size) {
-    if (Objects.nonNull(size) && size <= 0) {
-      throw new BaseException(ErrorCode.PAGE_SIZE_LESS_THAN_OR_EQUAL_TO_ZERO);
-    }
-    return Objects.isNull(size) ? 10 : size;
   }
 }

@@ -10,9 +10,12 @@ import com.hudel.web.backend.repository.BlogRepository;
 import com.hudel.web.backend.rest.web.model.request.CreateNewBlogRequest;
 import com.hudel.web.backend.rest.web.service.BlogService;
 import com.hudel.web.backend.rest.web.service.ImageService;
+import com.hudel.web.backend.rest.web.util.PageUtil;
 import com.hudel.web.backend.rest.web.util.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,6 +58,13 @@ public class BlogServiceImpl implements BlogService {
     File coverImage = imageService.uploadImage(file);
     updateContentImage(blog, coverImage);
     return blogRepository.save(blog);
+  }
+
+  @Override
+  public Page<Blog> findByTitle(Integer page, Integer size, String title) {
+    PageRequest pageRequest = PageUtil.validateAndGetPageRequest(page, size);
+    return blogRepository.searchByTitle(stringUtil.isStringNullOrBlank(title) ? "" : title,
+        pageRequest);
   }
 
   private Blog buildNewBlog(CreateNewBlogRequest request) {
