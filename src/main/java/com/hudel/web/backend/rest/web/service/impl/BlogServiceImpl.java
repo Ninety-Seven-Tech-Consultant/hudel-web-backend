@@ -61,6 +61,13 @@ public class BlogServiceImpl implements BlogService {
   }
 
   @Override
+  public void deleteById(String id) {
+    validateIdNotNull(id);
+    Blog blog = findBlogById(id);
+    blogRepository.delete(blog);
+  }
+
+  @Override
   public Page<Blog> findByTitle(Integer page, Integer size, String title) {
     PageRequest pageRequest = PageUtil.validateAndGetPageRequest(page, size);
     return blogRepository.searchByTitle(stringUtil.isStringNullOrBlank(title) ? "" : title,

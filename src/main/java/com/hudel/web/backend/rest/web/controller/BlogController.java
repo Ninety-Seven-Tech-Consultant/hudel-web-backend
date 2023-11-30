@@ -4,6 +4,7 @@ import com.hudel.web.backend.model.constant.ApiPath;
 import com.hudel.web.backend.model.entity.Blog;
 import com.hudel.web.backend.rest.web.model.request.CreateNewBlogRequest;
 import com.hudel.web.backend.rest.web.model.response.BlogResponse;
+import com.hudel.web.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.hudel.web.backend.rest.web.model.response.rest.RestPageResponse;
 import com.hudel.web.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.hudel.web.backend.rest.web.service.BlogService;
@@ -13,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +54,12 @@ public class BlogController extends BaseController {
       @RequestParam("file") MultipartFile file) throws IOException {
     Blog blog = blogService.updateContentImageById(id, file);
     return toSingleResponse(toBlogResponse(blog));
+  }
+
+  @DeleteMapping(value = ApiPath.BLOG_DELETE_BY_ID)
+  public RestBaseResponse deleteById(@PathVariable("id") String id) {
+    blogService.deleteById(id);
+    return toBaseResponse();
   }
 
   @PostMapping(value = ApiPath.BLOG_FIND_BY_TITLE)

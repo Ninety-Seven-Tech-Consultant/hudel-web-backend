@@ -15,6 +15,8 @@ public interface BlogService {
 
   Blog updateContentImageById(String id, MultipartFile file) throws IOException;
 
+  void deleteById(String id);
+
   Page<Blog> findByTitle(Integer page, Integer size, String title);
 
   Blog findById(String id);
