@@ -64,6 +64,12 @@ public class BlogController extends BaseController {
     return toPageResponse(content, blogs);
   }
 
+  @PostMapping(value = ApiPath.BLOG_FIND_BY_ID)
+  public RestSingleResponse<BlogResponse> findByTitle(@RequestParam String id) {
+    Blog blog = blogService.findById(id);
+    return toSingleResponse(toBlogResponse(blog));
+  }
+
   private BlogResponse toBlogResponse(Blog blog) {
     BlogResponse response = new BlogResponse();
     BeanUtils.copyProperties(blog, response);

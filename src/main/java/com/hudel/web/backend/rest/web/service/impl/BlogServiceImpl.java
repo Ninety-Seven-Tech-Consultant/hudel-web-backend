@@ -67,6 +67,12 @@ public class BlogServiceImpl implements BlogService {
         pageRequest);
   }
 
+  @Override
+  public Blog findById(String id) {
+    validateIdNotNull(id);
+    return findBlogById(id);
+  }
+
   private Blog buildNewBlog(CreateNewBlogRequest request) {
     Blog blog = new Blog();
     BeanUtils.copyProperties(request, blog);
