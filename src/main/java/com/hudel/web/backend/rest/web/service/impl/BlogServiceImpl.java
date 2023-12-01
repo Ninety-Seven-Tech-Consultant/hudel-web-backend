@@ -65,6 +65,7 @@ public class BlogServiceImpl implements BlogService {
   public void deleteById(String id) {
     validateIdNotNull(id);
     Blog blog = findBlogById(id);
+    deleteNonDefaultImages(blog);
     blogRepository.delete(blog);
   }
 
@@ -139,5 +140,13 @@ public class BlogServiceImpl implements BlogService {
         .url(sysparamProperties.getImageRetrieveUrl() + file.getFileId())
         .isDefault(false)
         .build();
+  }
+
+  private void deleteNonDefaultImages(Blog blog) {
+    if (!blog.getCoverImage().isDefault()) {
+      imageService.deleteImageById(blog.getCoverImage().getImageId());
+    } else if (!blog.getContentImage().isDefault()) {
+      imageService.deleteImageById(blog.getContentImage().getImageId());
+    }
   }
 }
