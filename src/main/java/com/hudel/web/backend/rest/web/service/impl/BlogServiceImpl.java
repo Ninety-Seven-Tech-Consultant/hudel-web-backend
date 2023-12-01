@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -78,6 +79,14 @@ public class BlogServiceImpl implements BlogService {
   public Blog findById(String id) {
     validateIdNotNull(id);
     return findBlogById(id);
+  }
+
+  @Override
+  public List<Blog> getSuggestedBlogs(Integer size, String id) {
+    if (Objects.isNull(size)) {
+      size = 3;
+    }
+    return blogRepository.findSuggestedBlogsById(size, id);
   }
 
   private Blog buildNewBlog(CreateNewBlogRequest request) {

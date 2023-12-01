@@ -31,4 +31,5 @@ public class ApiPath {
   public static final String BLOG_DELETE_BY_ID = "/{id}";
   public static final String BLOG_FIND_BY_TITLE = "/find-by-title"; // Public
   public static final String BLOG_FIND_BY_ID = "/find-by-id"; // Public
+  public static final String BLOG_GET_SUGGESTED_BLOGS_BY_ID = "/suggested-blogs"; // Public
 }

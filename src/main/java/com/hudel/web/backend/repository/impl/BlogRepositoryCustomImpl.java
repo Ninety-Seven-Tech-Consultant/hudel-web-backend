@@ -30,4 +30,12 @@ public class BlogRepositoryCustomImpl implements BlogRepositoryCustom {
     return PageableExecutionUtils.getPage(blogs, pageRequest,
         () -> mongoTemplate.count(Query.of(query).limit(-1).skip(-1), Blog.class));
   }
+
+  @Override
+  public List<Blog> findSuggestedBlogsById(Integer size, String id) {
+    Query query = new Query().addCriteria(where("id").ne(id))
+        .with(Sort.by(DESC, "datePublished"))
+        .limit(size);
+    return mongoTemplate.find(query, Blog.class);
+  }
 }

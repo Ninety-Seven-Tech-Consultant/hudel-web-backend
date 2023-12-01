@@ -5,6 +5,7 @@ import com.hudel.web.backend.model.entity.Blog;
 import com.hudel.web.backend.rest.web.model.request.CreateNewBlogRequest;
 import com.hudel.web.backend.rest.web.model.response.BlogResponse;
 import com.hudel.web.backend.rest.web.model.response.rest.RestBaseResponse;
+import com.hudel.web.backend.rest.web.model.response.rest.RestListResponse;
 import com.hudel.web.backend.rest.web.model.response.rest.RestPageResponse;
 import com.hudel.web.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.hudel.web.backend.rest.web.service.BlogService;
@@ -76,6 +77,13 @@ public class BlogController extends BaseController {
   public RestSingleResponse<BlogResponse> findByTitle(@RequestParam String id) {
     Blog blog = blogService.findById(id);
     return toSingleResponse(toBlogResponse(blog));
+  }
+
+  @PostMapping(value = ApiPath.BLOG_GET_SUGGESTED_BLOGS_BY_ID)
+  public RestListResponse<BlogResponse> getSuggestedBlogs(
+      @RequestParam(required = false) Integer size, @RequestParam String id) {
+    List<Blog> blogs = blogService.getSuggestedBlogs(size, id);
+    return toListResponse(blogs.stream().map(this::toBlogResponse).collect(Collectors.toList()));
   }
 
   private BlogResponse toBlogResponse(Blog blog) {
