@@ -7,7 +7,7 @@ import com.hudel.web.backend.model.entity.BlogImage;
 import com.hudel.web.backend.model.entity.File;
 import com.hudel.web.backend.model.exception.BaseException;
 import com.hudel.web.backend.repository.BlogRepository;
-import com.hudel.web.backend.rest.web.model.request.CreateNewBlogRequest;
+import com.hudel.web.backend.rest.web.model.request.UpsertNewBlogRequest;
 import com.hudel.web.backend.rest.web.service.BlogService;
 import com.hudel.web.backend.rest.web.service.ImageService;
 import com.hudel.web.backend.rest.web.util.PageUtil;
@@ -39,8 +39,15 @@ public class BlogServiceImpl implements BlogService {
   private SysparamProperties sysparamProperties;
 
   @Override
-  public Blog createNewBlog(CreateNewBlogRequest request) {
+  public Blog createNewBlog(UpsertNewBlogRequest request) {
     return blogRepository.save(buildNewBlog(request));
+  }
+
+  @Override
+  public Blog updateById(String id, UpsertNewBlogRequest request) {
+    validateIdNotNull(id);
+    Blog blog = findBlogById(id);
+    return updateBlogFromRequestAndSaveToMongo(blog, request);
   }
 
   @Override
@@ -90,7 +97,7 @@ public class BlogServiceImpl implements BlogService {
     return blogRepository.findSuggestedBlogsById(size, id);
   }
 
-  private Blog buildNewBlog(CreateNewBlogRequest request) {
+  private Blog buildNewBlog(UpsertNewBlogRequest request) {
     Blog blog = new Blog();
     BeanUtils.copyProperties(request, blog);
     blog.setCoverImage(buildDefaultBlogImage());
@@ -118,6 +125,14 @@ public class BlogServiceImpl implements BlogService {
       throw new BaseException(ErrorCode.BLOG_NOT_FOUND);
     }
     return blog;
+  }
+
+  private Blog updateBlogFromRequestAndSaveToMongo(Blog blog, UpsertNewBlogRequest request) {
+    blog.setTitle(request.getTitle());
+    blog.setReadDurationInMinutes(request.getReadDurationInMinutes());
+    blog.setDatePublished(request.getDatePublished());
+    blog.setContent(request.getContent());
+    return blogRepository.save(blog);
   }
 
   private void updateCoverImage(Blog blog, File file) {

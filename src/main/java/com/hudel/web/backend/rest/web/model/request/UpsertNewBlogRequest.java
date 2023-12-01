@@ -17,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateNewBlogRequest implements Serializable {
+public class UpsertNewBlogRequest implements Serializable {
 
   private static final long serialVersionUID = -278823273992821241L;
 

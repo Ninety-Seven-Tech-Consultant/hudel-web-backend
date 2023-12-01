@@ -2,7 +2,7 @@ package com.hudel.web.backend.rest.web.controller;
 
 import com.hudel.web.backend.model.constant.ApiPath;
 import com.hudel.web.backend.model.entity.Blog;
-import com.hudel.web.backend.rest.web.model.request.CreateNewBlogRequest;
+import com.hudel.web.backend.rest.web.model.request.UpsertNewBlogRequest;
 import com.hudel.web.backend.rest.web.model.response.BlogResponse;
 import com.hudel.web.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.hudel.web.backend.rest.web.model.response.rest.RestListResponse;
@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,8 +39,15 @@ public class BlogController extends BaseController {
   private BlogService blogService;
 
   @PostMapping
-  public RestSingleResponse<BlogResponse> createNewBlog(@RequestBody CreateNewBlogRequest request) {
+  public RestSingleResponse<BlogResponse> createNewBlog(@RequestBody UpsertNewBlogRequest request) {
     Blog blog = blogService.createNewBlog(request);
+    return toSingleResponse(toBlogResponse(blog));
+  }
+
+  @PutMapping(value = ApiPath.BLOG_UPDATE_BY_ID)
+  public RestSingleResponse<BlogResponse> updateBlogById(@PathVariable("id") String id,
+      @RequestBody UpsertNewBlogRequest request) {
+    Blog blog = blogService.updateById(id, request);
     return toSingleResponse(toBlogResponse(blog));
   }
 
