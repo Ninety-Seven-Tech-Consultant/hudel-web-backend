@@ -33,4 +33,7 @@ public class UpsertNewBlogRequest implements Serializable {
 
   @NotBlank
   private String content;
+
+  @NotBlank
+  private String shortDescription;
 }

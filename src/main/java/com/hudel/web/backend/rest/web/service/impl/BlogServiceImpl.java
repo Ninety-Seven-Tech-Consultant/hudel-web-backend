@@ -132,6 +132,7 @@ public class BlogServiceImpl implements BlogService {
     blog.setReadDurationInMinutes(request.getReadDurationInMinutes());
     blog.setDatePublished(request.getDatePublished());
     blog.setContent(request.getContent());
+    blog.setShortDescription(request.getShortDescription());
     return blogRepository.save(blog);
   }
 

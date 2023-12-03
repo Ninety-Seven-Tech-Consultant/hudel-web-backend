@@ -25,6 +25,7 @@ public class Blog extends BaseMongoEntity {
   private Integer readDurationInMinutes;
   private Date datePublished;
   private String content;
+  private String shortDescription;
   private BlogImage coverImage;
   private BlogImage contentImage;
 }

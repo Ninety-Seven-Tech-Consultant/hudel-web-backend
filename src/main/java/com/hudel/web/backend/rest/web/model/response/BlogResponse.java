@@ -22,6 +22,7 @@ public class BlogResponse implements Serializable {
   private Integer readDurationInMinutes;
   private String datePublished;
   private String content;
+  private String shortDescription;
   private String coverImageUrl;
   private String contentImageUrl;
 }
