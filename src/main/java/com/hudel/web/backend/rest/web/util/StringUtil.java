@@ -2,6 +2,7 @@ package com.hudel.web.backend.rest.web.util;
 
 import com.hudel.web.backend.model.constant.ErrorCode;
 import com.hudel.web.backend.model.exception.BaseException;
+import net.bytebuddy.utility.RandomString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -61,5 +62,13 @@ public class StringUtil {
     if (isStringNullOrBlank(domain)) {
       throw new BaseException(ErrorCode.DOMAIN_BLANK_OR_NULL);
     }
+  }
+
+  public String generateFileId() {
+    return generateIdOfPrefixAndLength("FIL-", 6);
+  }
+
+  private String generateIdOfPrefixAndLength(String prefix, int length) {
+    return prefix + RandomString.make(length).toUpperCase();
   }
 }

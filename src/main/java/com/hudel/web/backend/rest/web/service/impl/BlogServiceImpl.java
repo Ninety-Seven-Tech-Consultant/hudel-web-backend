@@ -1,0 +1,168 @@
+package com.hudel.web.backend.rest.web.service.impl;
+
+import com.hudel.web.backend.config.properties.SysparamProperties;
+import com.hudel.web.backend.model.constant.ErrorCode;
+import com.hudel.web.backend.model.entity.Blog;
+import com.hudel.web.backend.model.entity.BlogImage;
+import com.hudel.web.backend.model.entity.File;
+import com.hudel.web.backend.model.exception.BaseException;
+import com.hudel.web.backend.repository.BlogRepository;
+import com.hudel.web.backend.rest.web.model.request.UpsertNewBlogRequest;
+import com.hudel.web.backend.rest.web.service.BlogService;
+import com.hudel.web.backend.rest.web.service.ImageService;
+import com.hudel.web.backend.rest.web.util.PageUtil;
+import com.hudel.web.backend.rest.web.util.StringUtil;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
+@Service
+public class BlogServiceImpl implements BlogService {
+
+  @Autowired
+  private BlogRepository blogRepository;
+
+  @Autowired
+  private ImageService imageService;
+
+  @Autowired
+  private StringUtil stringUtil;
+
+  @Autowired
+  private SysparamProperties sysparamProperties;
+
+  @Override
+  public Blog createNewBlog(UpsertNewBlogRequest request) {
+    return blogRepository.save(buildNewBlog(request));
+  }
+
+  @Override
+  public Blog updateById(String id, UpsertNewBlogRequest request) {
+    validateIdNotNull(id);
+    Blog blog = findBlogById(id);
+    return updateBlogFromRequestAndSaveToMongo(blog, request);
+  }
+
+  @Override
+  public Blog updateCoverImageById(String id, MultipartFile file) throws IOException {
+    validateIdNotNull(id);
+    Blog blog = findBlogById(id);
+    File coverImage = imageService.uploadImage(file);
+    updateCoverImage(blog, coverImage);
+    return blogRepository.save(blog);
+  }
+
+  @Override
+  public Blog updateContentImageById(String id, MultipartFile file) throws IOException {
+    validateIdNotNull(id);
+    Blog blog = findBlogById(id);
+    File coverImage = imageService.uploadImage(file);
+    updateContentImage(blog, coverImage);
+    return blogRepository.save(blog);
+  }
+
+  @Override
+  public void deleteById(String id) {
+    validateIdNotNull(id);
+    Blog blog = findBlogById(id);
+    deleteNonDefaultImages(blog);
+    blogRepository.delete(blog);
+  }
+
+  @Override
+  public Page<Blog> findByTitle(Integer page, Integer size, String title) {
+    PageRequest pageRequest = PageUtil.validateAndGetPageRequest(page, size);
+    return blogRepository.searchByTitle(stringUtil.isStringNullOrBlank(title) ? "" : title,
+        pageRequest);
+  }
+
+  @Override
+  public Blog findById(String id) {
+    validateIdNotNull(id);
+    return findBlogById(id);
+  }
+
+  @Override
+  public List<Blog> getSuggestedBlogs(Integer size, String id) {
+    if (Objects.isNull(size)) {
+      size = 3;
+    }
+    return blogRepository.findSuggestedBlogsById(size, id);
+  }
+
+  private Blog buildNewBlog(UpsertNewBlogRequest request) {
+    Blog blog = new Blog();
+    BeanUtils.copyProperties(request, blog);
+    blog.setCoverImage(buildDefaultBlogImage());
+    blog.setContentImage(buildDefaultBlogImage());
+    return blog;
+  }
+
+  private BlogImage buildDefaultBlogImage() {
+    return BlogImage.builder()
+        .imageId(sysparamProperties.getBlogDefaultImageId())
+        .url(sysparamProperties.getImageRetrieveUrl() + sysparamProperties.getBlogDefaultImageId())
+        .isDefault(true)
+        .build();
+  }
+
+  private void validateIdNotNull(String id) {
+    if (stringUtil.isStringNullOrBlank(id)) {
+      throw new BaseException(ErrorCode.ID_IS_NULL);
+    }
+  }
+
+  private Blog findBlogById(String id) {
+    Blog blog = blogRepository.findById(id).orElse(null);
+    if (Objects.isNull(blog)) {
+      throw new BaseException(ErrorCode.BLOG_NOT_FOUND);
+    }
+    return blog;
+  }
+
+  private Blog updateBlogFromRequestAndSaveToMongo(Blog blog, UpsertNewBlogRequest request) {
+    blog.setTitle(request.getTitle());
+    blog.setReadDurationInMinutes(request.getReadDurationInMinutes());
+    blog.setDatePublished(request.getDatePublished());
+    blog.setContent(request.getContent());
+    blog.setShortDescription(request.getShortDescription());
+    return blogRepository.save(blog);
+  }
+
+  private void updateCoverImage(Blog blog, File file) {
+    if (!blog.getCoverImage().isDefault()) {
+      imageService.deleteImageById(blog.getCoverImage().getImageId());
+    }
+    blog.setCoverImage(toBlogImage(file));
+  }
+
+  private void updateContentImage(Blog blog, File file) {
+    if (!blog.getContentImage().isDefault()) {
+      imageService.deleteImageById(blog.getContentImage().getImageId());
+    }
+    blog.setContentImage(toBlogImage(file));
+  }
+
+  private BlogImage toBlogImage(File file) {
+    return BlogImage.builder()
+        .imageId(file.getFileId())
+        .url(sysparamProperties.getImageRetrieveUrl() + file.getFileId())
+        .isDefault(false)
+        .build();
+  }
+
+  private void deleteNonDefaultImages(Blog blog) {
+    if (!blog.getCoverImage().isDefault()) {
+      imageService.deleteImageById(blog.getCoverImage().getImageId());
+    } else if (!blog.getContentImage().isDefault()) {
+      imageService.deleteImageById(blog.getContentImage().getImageId());
+    }
+  }
+}

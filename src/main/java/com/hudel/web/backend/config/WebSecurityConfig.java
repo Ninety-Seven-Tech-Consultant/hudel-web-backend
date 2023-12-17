@@ -61,6 +61,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(SWAGGER_URLS).permitAll()
         .antMatchers("/api/auth/**").permitAll()
         .antMatchers("/api/landing-page/**").permitAll()
+        .antMatchers("/api/images").permitAll()
+        .antMatchers("/api/images/**").permitAll()
+        .antMatchers("/api/blogs/find-by-title").permitAll()
+        .antMatchers("/api/blogs/find-by-id").permitAll()
+        .antMatchers("/api/blogs/suggested-blogs").permitAll()
         .anyRequest().authenticated();
 
     http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
